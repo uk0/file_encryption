@@ -14,11 +14,11 @@
 
 
 ```bash
-cargo run getname $filepath # 查看文件名
 
-cargo run decrypt $filepath #解密
 
-cargo run encrypt $filepath #加密
+./task e 11111111 0dxZNzzwEFq7PTZWWLoyLx.mp4
+
+
 
 ```
 

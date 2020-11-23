@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["张建新 <zhangjianxin@bigsfintech.com>"]
 edition = "2018"
 
+[[bin]]
+name = "task"
+path = "src/main.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
@@ -11,3 +15,6 @@ rand = "0.5.3"
 rust-crypto = "0.2.36"
 des = "0.0.4"
 uuid = { version = "0.8", features = ["serde", "v4"] }
+threadpool = "1.0"
+num_cpus = "1.13.0"
+memmap = "0.6.2"

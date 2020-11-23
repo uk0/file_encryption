@@ -41,8 +41,11 @@ name = "file_encryption"
 version = "0.1.0"
 dependencies = [
  "des",
+ "memmap",
+ "num_cpus 1.13.0",
  "rand 0.5.6",
  "rust-crypto",
+ "threadpool",
  "uuid",
 ]
 
@@ -70,10 +73,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "hermit-abi"
+version = "0.1.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5aca5565f760fb5b220e499d72710ed156fdb74e631659e99377d9ebfbd13ae8"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4d58d1b70b004888f764dfbf6a26a3b0342a1632d33968e4a179d8011c760614"
+
+[[package]]
+name = "memmap"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2ffa2c986de11a9df78620c01eeaaf27d94d3ff02bf81bfcca953102dd0c6ff"
+dependencies = [
+ "libc",
+ "winapi",
+]
 
 [[package]]
 name = "num_cpus"
@@ -81,6 +103,16 @@ version = "0.2.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cee7e88156f3f9e19bdd598f8d6c9db7bf4078f99f8381f43a55b09648d1a6e3"
 dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "num_cpus"
+version = "1.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05499f3756671c15885fee9034446956fff3f243d6077b91e5767df161f766b3"
+dependencies = [
+ "hermit-abi",
  "libc",
 ]
 
@@ -207,7 +239,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "655df67c314c30fa3055a365eae276eb88aa4f3413a352a1ab32c1320eda41ea"
 dependencies = [
  "deque",
- "num_cpus",
+ "num_cpus 0.2.13",
  "rand 0.3.23",
 ]
 
@@ -268,6 +300,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-xid",
+]
+
+[[package]]
+name = "threadpool"
+version = "1.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d050e60b33d41c19108b32cea32164033a9013fe3b46cbd4457559bfbf77afaa"
+dependencies = [
+ "num_cpus 1.13.0",
 ]
 
 [[package]]
