@@ -15,8 +15,10 @@
 
 ```bash
 
-
+# 加密
 ./task e 11111111 0dxZNzzwEFq7PTZWWLoyLx.mp4
+# 解密
+./task d 11111111 67da3b95-aada-47b8-82c9-7452f2a9d5e4 
 
 
 
