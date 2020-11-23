@@ -7,3 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rand = "0.5.3"
+rust-crypto = "0.2.36"
+des = "0.0.4"
+uuid = { version = "0.8", features = ["serde", "v4"] }
