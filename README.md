@@ -36,3 +36,30 @@ cbc1e3b73da2fb97206e707e5c3db35d  test.pdf
 cbc1e3b73da2fb97206e707e5c3db35d  test22222222.pdf
 
 ```
+
+#### build 
+
+
+```bash
+
+
+sudo port install x86_64-w64-mingw32-gcc
+
+rustup target add x86_64-pc-windows-gnu
+
+#                                                /toolchains/xxxxxxxx-apple-darwin/    
+cp /opt/local/x86_64-w64-mingw32/lib/* ~/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-pc-windows-gnu/lib/
+
+
+cargo build --target x86_64-pc-windows-gnu
+
+
+```
+
+
+
+#### windows
+
+
+
+![img](win_gui.png)
