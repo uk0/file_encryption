@@ -14,13 +14,26 @@
 
 
 ```bash
-
+# lib.rs
 # 加密
 ./task e 11111111 0dxZNzzwEFq7PTZWWLoyLx.mp4
 # 解密
 ./task d 11111111 67da3b95-aada-47b8-82c9-7452f2a9d5e4 
 
+#lib_self_release.rs
 
+# 加密
+./task e 11111111 0dxZNzzwEFq7PTZWWLoyLx.mp4
+
+# 解密
+./67da3b95-aada-47b8-82c9-7452f2a9d5e4 
+Please enter password
+asdasd
+result tmp_data_len 559218
+file result len = 6512
+file start index = 552696
+decrypt file 
+File Name = win_gui.png
 
 ```
 
@@ -63,3 +76,15 @@ cargo build --target x86_64-pc-windows-gnu
 
 
 ![img](win_gui.png)
+
+
+
+
+##### Test
+
+
+```bash
+ae66ba9377dc5841ee6ec0e911027477  win_gui.png
+
+
+```

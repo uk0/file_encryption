@@ -1,13 +1,6 @@
-mod tools;
-
-extern crate num_cpus;
-extern crate threadpool;
-
 use std::{fs, thread, env};
 use std::io::{Write, BufReader, Read};
 use std::path::{Path, PathBuf};
-use core::time;
-use rand::{OsRng, RngCore};
 use std::fs::File;
 use std::ptr::null;
 use std::ops::Index;
@@ -51,7 +44,23 @@ fn to_key(slice: &[u8]) -> [u8; 8] {
     key
 }
 
-fn main() {
+pub fn generate_the_string(n: i32) -> String {
+    let mut ans = String::new();
+    if n % 2 == 0 {
+        for num in (0..n-1).rev() {
+            ans.push_str("a");
+        }
+        ans.push_str("b");
+    } else {
+        for num in (0..n).rev() {
+            ans.push_str("a");
+        }
+    }
+    return ans;
+}
+
+
+fn main(){
     let args: Vec<String> = env::args().collect();
     let types = &args[1];
     let key = &args[2];
@@ -82,6 +91,7 @@ fn main() {
         // println!("{:?}", data.len());
         let t1 = Uuid::new_v4().to_string();
         let path = t1.as_str();
+        // let path = generate_the_string(32);
         println!("encrypt out file {:}", path.clone());
         write_bin(data, path);
     } else if types == "d" {
