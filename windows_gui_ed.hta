@@ -6,7 +6,7 @@
     <script type="text/javascript">
         while (true) {
             try {
-                var w = 400, h = 400;
+                var w = 400, h = 600;
                 window.resizeTo(w, h);
                 window.moveTo((window.screen.width - w) / 2, (window.screen.height - h) / 2);
                 break;
@@ -69,9 +69,9 @@
 </select>
 <p>秘钥：<input name = key></input></P>
 <p>选择文件：<input name=f type=file></P>
-<p>GEN_CMD：<textarea style="width: 350px; height: 150px;" name=exe></textarea></P>
-<BUTTON style="width: 80px; height: 23px; color: #FFFFFF; background:green;font-size: 15px;font-weight:bolder;border-radius:6px;" class=button onclick="self.close()">离开</BUTTON>
-<BUTTON style="width: 80px; height: 23px; color: #FFFFFF; background:green;font-size: 15px;font-weight:bolder;border-radius:6px;" class=button onclick="Run('entry.exe')">开始</BUTTON>
+<p>GEN_CMD：<textarea style="width: 350px; height: 40px;" name=exe></textarea></P>
+<BUTTON  onclick="self.close()">离开</BUTTON>
+<BUTTON  onclick="Run('entry.exe')">开始</BUTTON>
 
 
 </body>
