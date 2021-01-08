@@ -14,7 +14,8 @@ selectFileBtn.addEventListener('click', function (event) {
     ipc.send('open-file-dialog-for-file')
 });
 
-const exec = require('child_process').spawn
+const execosx = require('child_process').spawn
+const execwin = require('child_process').spawn
 
 const exit = document.getElementById('exit');
 const start = document.getElementById('start');
@@ -41,13 +42,15 @@ start.addEventListener('click', function (event) {
 
         Key = key1
         if (os.platform() === 'win32') {
-            exec(binDir + '/task.exe', ['e', Key, SelectFile, savedir]).stdout.on('data', (data) => {
-                alert(`生成文件在: ${__dirname}/${data}`.replace("encrypt out file ", ""));
+            execwin(binDir + '/task.exe', ['e', Key, SelectFile, savedir],{shell: true}).stdout.on('data', (data) => {
+                alert(`生成文件在: ${__dirname}\\${data}`.replace("encrypt out file ", ""));
+            });
+        }else {
+            execosx(binDir + '/task', ['e', Key, SelectFile, savedir]).stdout.on('data', (data) => {
+                alert(`生成文件在: ${data}`.replace("encrypt out file ", ""));
             });
         }
-        exec(binDir + '/task', ['e', Key, SelectFile, savedir]).stdout.on('data', (data) => {
-            alert(`生成文件在: ${data}`.replace("encrypt out file ", ""));
-        });
+
 
     } else {
         alert("请检查参数。")
