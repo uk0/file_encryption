@@ -1,0 +1,25 @@
+{
+  "name": "file_encryption",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager ./   file_encryption --out ./outapp --app-version  1.0.0 --overwrite --icon=./images/logo.png",
+    "packagewin": "electron-packager ./   file_encryption --platform=win32  --arch=x64  --out ./outapp --app-version  1.0.0 --overwrite --icon=./images/logo.png"
+  },
+  "keywords": [
+    "Electron"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^11.1.1",
+    "electron-packager": "^15.2.0"
+  },
+  "build": {
+    "extraResources": [
+      "./bin/**"
+    ]
+  }
+}

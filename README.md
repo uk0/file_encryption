@@ -71,8 +71,14 @@ cargo build --target x86_64-pc-windows-gnu
 
 
 
-#### windows
+#### macos
 
+
+
+![img](WX20210108-151253@2x.png)
+
+
+#### windows
 
 
 ![img](win_gui.png)

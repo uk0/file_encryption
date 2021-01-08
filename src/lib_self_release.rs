@@ -49,6 +49,9 @@ fn to_key(slice: &[u8]) -> [u8; 8] {
     key
 }
 
+//F:/t/t/t/
+//F:\\t\\t\\t\\
+
 pub fn convert_path(path_str: &str) -> String {
     if cfg!(target_os = "windows") {
         String::from(path_str.replace("\\", "/"))
@@ -134,6 +137,7 @@ fn main() {
         let types = &args[1];
         let key = &args[2];
         let filename = &args[3];
+        let savepath = &args[4];
         // println!("encryption start !");
         let mut result = fs::read(filename).unwrap();
         // println!("需要加密的文件长度 = {:?}", result.len());
@@ -162,8 +166,8 @@ fn main() {
             // println!("加密数据长度{:}", data.len());
             let mut path = "";
             let mut t1 = String::from(Uuid::new_v4().to_string());
-            if _is_win_os_(){
-                 t1.push_str(".exe");
+            if _is_win_os_() {
+                t1.push_str(".exe");
             }
             path = t1.as_str();
             let mut base_file = fs::read(base).unwrap();
@@ -181,7 +185,7 @@ fn main() {
             // 保存文件
             // println!("文件最终长度{:}", base_file.len());
             println!("encrypt out file {:}", path.clone());
-            write_bin(base_file, path);
+            write_bin(base_file, convert_path(savepath) + convert_spell() + path);
         }
     } else {
         use std::io;
@@ -193,14 +197,14 @@ fn main() {
         let mut pass = input.clone();
         let mut imput_clone = input.clone();
 
-        // println!("{:?}", imput_clone);
+        println!("{:?}", imput_clone);
 
         let len_withoutcrlf = imput_clone.trim_right().len();
         imput_clone.truncate(len_withoutcrlf);
 
         pass = imput_clone;
 
-        // println!("{:?}", pass);
+        println!("{:?}", pass);
 
         let mut result_tmp = fs::read(base).unwrap();
         let mut index_file = String::from("");
@@ -224,7 +228,7 @@ fn main() {
         let start_usize = *tmp_data_len as usize + 1;
         //  找到文件名字
         let mut path_u8_tmp = &data[1..start_usize];
-        // println!("File Name = {:}", String::from_utf8(path_u8_tmp.to_vec()).unwrap());
+        println!("File Name = {:}", String::from_utf8(path_u8_tmp.to_vec()).unwrap());
         // 找到剩下的数据
         let temp_write = &data.clone()[start_usize..data.len()];
         // 找到文件名

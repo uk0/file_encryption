@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+<!--    <meta http-equiv="Content-Security-Policy" content="default-src 'self' style-src 'self' 'unsafe-inline';">-->
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self' style-src 'self' 'unsafe-inline';">
+    <title>文件加密工具</title>
+    <style>
+        input{
+            width: 180px;
+            height: 30px;
+        }
+        select{
+            width: 188px;
+            height: 35px;
+        }
+
+        .start-btn {
+            border-radius: 2px;
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+        .stop-btn {
+            border-radius: 2px;
+            background-color: red; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+
+    </style>
+</head>
+
+<body>
+<p>保存位置：<input id="savedir" value="C:\tmp or /Users/mymac"> </p>
+<p>类型选择：<select id="entry" name="entry">
+    <option value="e">加密</option>
+</select></p>
+<p>秘&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;钥：<input name="key" id="key1"></input></P>
+<p>确认秘钥：<input name="key" id="key2"></input></P>
+
+<p>选择文件：
+    <button id="select-directory">Select File</button>
+</P>
+
+<button id="exit" class="stop-btn">离开</button>
+
+<button id="start" class="start-btn" >开始</button>
+
+</button>
+<!--<button id="getFullPath" class="start-btn">查看文件路径</button>-->
+<div id="selected-file">
+    <p>生成的加密文件支持自释放。</p>
+    <p>The generated encrypted file supports self-release</p>
+</div>
+
+<script src="./renderer.js"></script>
+</body>
+</html>
