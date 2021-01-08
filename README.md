@@ -29,24 +29,10 @@
 ./67da3b95-aada-47b8-82c9-7452f2a9d5e4 
 Please enter password
 asdasd
-result tmp_data_len 559218
-file result len = 6512
-file start index = 552696
-decrypt file 
 File Name = win_gui.png
 
 ```
 
-
-
-#### test
-
-```bash
-
-(base) ➜  file_encryption git:(main) ✗ md5sum test.pdf 
-cbc1e3b73da2fb97206e707e5c3db35d  test.pdf
-(base) ➜  file_encryption git:(main) ✗ md5sum test22222222.pdf 
-cbc1e3b73da2fb97206e707e5c3db35d  test22222222.pdf
 
 ```
 
@@ -75,22 +61,11 @@ cargo build --target x86_64-pc-windows-gnu
 
 
 
-![img](WX20210108-151253@2x.png)
+![img](osx.png)
 
 
 #### windows
 
 
-![img](win_gui.png)
+![img](windows.png)
 
-
-
-
-##### Test
-
-
-```bash
-ae66ba9377dc5841ee6ec0e911027477  win_gui.png
-
-
-```
