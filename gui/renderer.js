@@ -20,6 +20,7 @@ const execwin = require('child_process').spawn
 const exit = document.getElementById('exit');
 const start = document.getElementById('start');
 
+
 exit.addEventListener('click', function (event) {
     ipc.send("system", "1");
 });
@@ -41,13 +42,21 @@ start.addEventListener('click', function (event) {
         }
 
         Key = key1
+        // zindex
+        document.getElementById("zindex").hidden = false;
+        document.getElementById("zindex").className = "zindex"
+
         if (os.platform() === 'win32') {
             execwin(binDir + '/task.exe', ['e', Key, SelectFile, savedir],{shell: true}).stdout.on('data', (data) => {
-                alert(`生成文件在: ${__dirname}\\${data}`.replace("encrypt out file ", ""));
+                document.getElementById("zindex").hidden = true;
+                document.getElementById("zindex").className = ""
+                alert(`生成文件在: ${savedir}\\${data}`.replace("encrypt out file ", ""));
             });
         }else {
             execosx(binDir + '/task', ['e', Key, SelectFile, savedir]).stdout.on('data', (data) => {
-                alert(`生成文件在: ${data}`.replace("encrypt out file ", ""));
+                document.getElementById("zindex").hidden = true;
+                document.getElementById("zindex").className = ""
+                alert(`生成文件在: ${savedir}/${data}`.replace("encrypt out file ", ""));
             });
         }
 

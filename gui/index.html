@@ -40,11 +40,52 @@
             font-size: 16px;
         }
 
+        .zindex{
+            background: grey;
+            z-index: 1000;
+            width: 400px;
+            height: 600px;
+            position: absolute;
+
+            text-align: center;
+
+        }
+        .loader {
+            position: relative;
+            left: 31%;
+            top: 40%;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #44c400;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 
 <body>
-<p>保存位置：<input id="savedir" value="C:\tmp or /Users/mymac"> </p>
+
+<div id="zindex" hidden>
+    <div class="loader" id="loader">
+
+    </div>
+</div>
+
+<p>保存位置：<input id="savedir" value="/Users/zhangjianxin/tmp"> </p>
 <p>类型选择：<select id="entry" name="entry">
     <option value="e">加密</option>
 </select></p>
