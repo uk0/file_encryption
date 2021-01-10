@@ -1,4 +1,4 @@
-// Modules to control application life and create native browser window
+// auth zhangjianxin
 const {app, BrowserWindow} = require('electron')
 
 const dialog = require('electron').dialog;
