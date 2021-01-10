@@ -130,6 +130,16 @@ pub fn cover_usize_to_u8s(u: usize, ad: usize) -> [u8; 10] {
 }
 
 
+fn get_platform(types: i8) -> &'static str {
+    match types {
+        1 => "./bin/task_unix",
+        2 => "./bin/task.exe",
+        3 => "./bin/task_linux",
+        _ => ""
+    }
+}
+
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let base = &args[0];
@@ -138,6 +148,9 @@ fn main() {
         let key = &args[2];
         let filename = &args[3];
         let savepath = &args[4];
+        let to_platform: i8 = (&args[5]).parse().unwrap();
+        let platform = get_platform(to_platform);
+        // println!("platform ! {:?}", platform);
         // println!("encryption start !");
         let mut result = fs::read(filename).unwrap();
         // println!("需要加密的文件长度 = {:?}", result.len());
@@ -166,11 +179,13 @@ fn main() {
             // println!("加密数据长度{:}", data.len());
             let mut path = "";
             let mut t1 = String::from(Uuid::new_v4().to_string());
-            if _is_win_os_() {
+            if to_platform == 2 {
                 t1.push_str(".exe");
             }
             path = t1.as_str();
-            let mut base_file = fs::read(base).unwrap();
+            // platform
+            println!("base  = {:?}",base);
+            let mut base_file = fs::read(platform).unwrap();
             let de_code_index = base_file.len();
             // 将内容写进去 二进制文件 尾巴
             base_file.write(data.as_slice());
