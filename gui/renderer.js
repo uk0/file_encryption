@@ -1,7 +1,7 @@
 const ipc = require('electron').ipcRenderer;
 const selectFileBtn = document.getElementById('select-directory');
 const os = require("os")
-let isDebug = true;
+let isDebug = false;
 
 let SelectFile = null;
 
@@ -47,16 +47,25 @@ start.addEventListener('click', function (event) {
         document.getElementById("zindex").className = "zindex"
 
         if (os.platform() === 'win32') {
-            execwin(binDir + '/task.exe', ['e', Key, SelectFile, savedir,platform],{shell: true}).stdout.on('data', (data) => {
+
+            console.log(binDir + '/task.exe' + ' ' +Key + ' '+ SelectFile+ ' ' + savedir +' ' +platform);
+
+            let ex = execosx(binDir + '/task.exe', ['e', Key, SelectFile, savedir, platform], {shell: true});
+
+            ex.stderr.on('data', (data) => {
+                console.log(`data = ${data}`)
+            })
+
+            ex.stdout.on('data', (data) => {
                 document.getElementById("zindex").hidden = true;
                 document.getElementById("zindex").className = ""
                 alert(`生成文件在: ${savedir}\\${data}`.replace("encrypt out file ", ""));
             });
         }
-        if (os.platform()==="darwin"){
-            let ex =  execosx(binDir + '/task_unix', ['e', Key, SelectFile, savedir,platform])
+        if (os.platform() === "darwin") {
+            let ex = execosx(binDir + '/task_unix', ['e', Key, SelectFile, savedir, platform])
 
-            ex.stderr.on('data',(data)=>{
+            ex.stderr.on('data', (data) => {
                 console.log(`data = ${data}`)
             })
 
@@ -66,10 +75,10 @@ start.addEventListener('click', function (event) {
                 alert(`生成文件在: ${savedir}/${data}`.replace("encrypt out file ", ""));
             });
         }
-        if (os.platform()==="linux"){
-            let ex =  execosx(binDir + '/task_linux', ['e', Key, SelectFile, savedir,platform])
+        if (os.platform() === "linux") {
+            let ex = execosx(binDir + '/task_linux', ['e', Key, SelectFile, savedir, platform])
 
-            ex.stderr.on('data',(data)=>{
+            ex.stderr.on('data', (data) => {
                 console.log(data)
             })
 

@@ -21,6 +21,7 @@ fn write_bin<P: AsRef<Path>>(vb: Vec<u8>, filename: P) -> std::io::Result<()> {
 }
 
 use std::ptr;
+use std::borrow::Borrow;
 
 unsafe fn prepend_slice<T: Copy>(vec: &mut Vec<T>, slice: &[T]) {
     let len = vec.len();
@@ -132,9 +133,9 @@ pub fn cover_usize_to_u8s(u: usize, ad: usize) -> [u8; 10] {
 
 fn get_platform(types: i8) -> &'static str {
     match types {
-        1 => "./bin/task_unix",
-        2 => "./bin/task.exe",
-        3 => "./bin/task_linux",
+        1 => "task_unix",
+        2 => "task.exe",
+        3 => "task_linux",
         _ => ""
     }
 }
@@ -183,9 +184,40 @@ fn main() {
                 t1.push_str(".exe");
             }
             path = t1.as_str();
+
+            let mut base_clone = base.clone();
             // platform
-            println!("base  = {:?}",base);
-            let mut base_file = fs::read(platform).unwrap();
+            if _is_win_os_() && to_platform == 1 {
+                //是windows 目标是 macos
+                base_clone = str::replace(&base_clone, "task.exe", "task_unix");
+            }
+
+            if _is_win_os_() && to_platform == 2 {
+                // 是 windows 目标 是 windows
+                base_clone = str::replace(&base_clone, "task.exe", "task.exe");
+            }
+
+            if _is_win_os_() && to_platform == 3 {
+                base_clone = str::replace(&base_clone, "task.exe", "task_linux");
+            }
+
+            if !_is_win_os_() && to_platform == 3 {
+                // 不是 windows 是 macos 目标 是linux
+                base_clone = str::replace(&base_clone, "task_unix", "task_linux");
+            }
+
+            if !_is_win_os_() && to_platform == 2 {
+                //不是windows 是 macos 目标是 windows
+                base_clone = str::replace(&base_clone, "task_unix", "task.exe");
+            }
+
+            if !_is_win_os_() && to_platform == 1 {
+                //不是windows 是 macos 目标是 macos
+                base_clone = str::replace(&base_clone, "task_unix", "task_unix");
+            }
+
+
+            let mut base_file = fs::read(base_clone).unwrap();
             let de_code_index = base_file.len();
             // 将内容写进去 二进制文件 尾巴
             base_file.write(data.as_slice());
@@ -212,14 +244,14 @@ fn main() {
         let mut pass = input.clone();
         let mut imput_clone = input.clone();
 
-        println!("{:?}", imput_clone);
+        // println!("{:?}", imput_clone);
 
         let len_withoutcrlf = imput_clone.trim_right().len();
         imput_clone.truncate(len_withoutcrlf);
 
         pass = imput_clone;
 
-        println!("{:?}", pass);
+        // println!("{:?}", pass);
 
         let mut result_tmp = fs::read(base).unwrap();
         let mut index_file = String::from("");
