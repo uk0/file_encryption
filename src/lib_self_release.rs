@@ -1,6 +1,6 @@
-#![feature(num_as_ne_bytes)]
-#![feature(array_methods)]
-#![feature(iter_advance_by)]
+// #![feature(num_as_ne_bytes)]
+// #![feature(array_methods)]
+// #![feature(iter_advance_by)]
 
 use std::{fs, thread, env};
 use std::io::{Write, BufReader, Read, BufRead};
