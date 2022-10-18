@@ -14,23 +14,13 @@
 
 
 ```bash
-
-# lib.rs
-# 加密
-./task e 11111111 0dxZNzzwEFq7PTZWWLoyLx.mp4
-# 解密
-./task d 11111111 67da3b95-aada-47b8-82c9-7452f2a9d5e4 
-
 #lib_self_release.rs
 
-# 加密
-./task e 11111111 0dxZNzzwEFq7PTZWWLoyLx.mp4
 
-# 解密
-./67da3b95-aada-47b8-82c9-7452f2a9d5e4 
-Please enter password
-asdasd
-File Name = win_gui.png
+ ./gui/bin/task_unix + type +' ' +Key + ' '+ SelectFile+ ' ' + savedir +' ' +platform
+ 
+ ./gui/bin/task_unix e test123 /Users/firshme/testfile  /Users/firshme/Desktop/work/file_encryption/  1
+
 
 ```
 
