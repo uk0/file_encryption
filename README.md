@@ -26,19 +26,36 @@
 ```
 
 
-#### build 
+#### build for linux target
+
+
+* mac dep install for linux target
+
+```bash
+brew tap SergioBenitez/osxct
+brew install x86_64-unknown-linux-gnu
+
+❯ vim ~/.cargo/config.toml
+add the following lines:
+```
+
+```toml
+[target.x86_64-unknown-linux-gnu]
+linker = "x86_64-unknown-linux-gnu-gcc"
+```
+
+
+#### build for windows target
+
+* mac dep install for windows target
 
 
 ```bash
-
-
 sudo port install x86_64-w64-mingw32-gcc
 
 rustup target add x86_64-pc-windows-gnu
-
 #                                                /toolchains/xxxxxxxx-apple-darwin/    
 cp /opt/local/x86_64-w64-mingw32/lib/* ~/.rustup/toolchains/nightly-x86_64-apple-darwin/lib/rustlib/x86_64-pc-windows-gnu/lib/
-
 
 cargo build --target x86_64-pc-windows-gnu
 
@@ -47,15 +64,22 @@ cargo build --target x86_64-pc-windows-gnu
 
 
 
+
+#### build
+
+
+```bash
+ ./build.sh
+```
+
+
+
+
 #### macos
-
-
 
 ![img](osx.png)
 
-
 #### windows
-
 
 ![img](windows.png)
 
