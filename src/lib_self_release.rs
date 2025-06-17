@@ -95,7 +95,7 @@ pub fn cover_usize_to_u8s(u: usize, ad: usize) -> [u8; 10] {
     // 99 99 99 99 99 99 // 6
     let mut str_one = u.to_string();
     // let mut data = Vec::<u8>::new();
-    let mut data: Vec<u8> = vec![0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let mut data: Vec<u8> = vec![0, 0, 0, 0, 0,r 0, 0, 0, 0, 0];
     // println!("file size start  = {:}", str_one);
     let mut str2 = String::from("");
     let mut index = 0;
