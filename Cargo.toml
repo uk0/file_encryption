@@ -9,10 +9,6 @@ name = "task"
 #path = "src/lib.rs"
 path = "src/lib_self_release.rs"
 
-[[bin]]
-name = "mt_task"
-path = "src/main.rs"
-
 [dependencies]
 des = "0.0.4"
 uuid = { version = "0.8", features = ["serde", "v4"] }
