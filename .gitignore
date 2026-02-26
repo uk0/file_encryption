@@ -2,8 +2,13 @@
 
 .idea
 .idea/*
+.DS_Store
+
+CLAUDE.md
 
 gui/node_modules
-gui/node_modules
 gui/outapp
-release
+release/
+build_stubs/
+
+docs/

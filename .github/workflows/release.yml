@@ -1,0 +1,184 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-arm64
+            runner: macos-latest
+            target: aarch64-apple-darwin
+            cli_name: task_unix
+            gui_name: file-encryption-gui
+            build_cli: true
+
+          - platform: macos-x86_64
+            runner: macos-13
+            target: x86_64-apple-darwin
+            cli_name: ""
+            gui_name: file-encryption-gui
+            build_cli: false
+
+          - platform: linux-x86_64
+            runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            cli_name: task_linux
+            gui_name: file-encryption-gui
+            build_cli: true
+
+          - platform: linux-arm64
+            runner: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            cli_name: task_linux_arm64
+            gui_name: ""
+            build_cli: true
+            cross: true
+
+          - platform: windows-x86_64
+            runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            cli_name: task.exe
+            gui_name: file-encryption-gui.exe
+            build_cli: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux' && matrix.cross != true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev \
+            libxkbcommon-dev libssl-dev libgtk-3-dev
+
+      - name: Install Linux ARM64 cross-compilation tools
+        if: matrix.cross == true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+      - name: Build CLI
+        if: matrix.build_cli == true
+        shell: bash
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: ${{ matrix.cross == true && 'aarch64-linux-gnu-gcc' || '' }}
+        run: cargo build --release --bin task --target ${{ matrix.target }}
+
+      - name: Build GUI
+        if: matrix.gui_name != ''
+        shell: bash
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: ${{ matrix.cross == true && 'aarch64-linux-gnu-gcc' || '' }}
+        run: cargo build --release --bin file-encryption-gui --target ${{ matrix.target }}
+
+      - name: Stage artifacts (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p staging
+          if [ -n "${{ matrix.gui_name }}" ]; then
+            cp target/${{ matrix.target }}/release/file-encryption-gui staging/
+          fi
+          if [ "${{ matrix.build_cli }}" = "true" ]; then
+            cp target/${{ matrix.target }}/release/task staging/${{ matrix.cli_name }}
+          fi
+
+      - name: Stage artifacts (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path staging
+          Copy-Item "target/${{ matrix.target }}/release/file-encryption-gui.exe" staging/
+          Copy-Item "target/${{ matrix.target }}/release/task.exe" staging/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.platform }}
+          path: staging/
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Prepare release archives
+        run: |
+          set -e
+          mkdir -p release
+
+          # Collect all CLI stubs into a shared bin directory
+          mkdir -p stubs
+          cp artifacts/build-macos-arm64/task_unix stubs/ 2>/dev/null || true
+          cp artifacts/build-linux-x86_64/task_linux stubs/ 2>/dev/null || true
+          cp artifacts/build-linux-arm64/task_linux_arm64 stubs/ 2>/dev/null || true
+          cp artifacts/build-windows-x86_64/task.exe stubs/ 2>/dev/null || true
+
+          # Package each platform with GUI + all CLI stubs
+          for platform in macos-arm64 macos-x86_64 linux-x86_64 windows-x86_64; do
+            mkdir -p "pkg/$platform/bin"
+            # Copy all stubs
+            cp stubs/* "pkg/$platform/bin/" 2>/dev/null || true
+          done
+
+          # Copy GUI binaries
+          cp artifacts/build-macos-arm64/file-encryption-gui pkg/macos-arm64/
+          cp artifacts/build-macos-x86_64/file-encryption-gui pkg/macos-x86_64/
+          cp artifacts/build-linux-x86_64/file-encryption-gui pkg/linux-x86_64/
+          cp artifacts/build-windows-x86_64/file-encryption-gui.exe pkg/windows-x86_64/
+
+          # Make Unix binaries executable
+          chmod +x pkg/macos-arm64/file-encryption-gui pkg/macos-arm64/bin/* 2>/dev/null || true
+          chmod +x pkg/macos-x86_64/file-encryption-gui pkg/macos-x86_64/bin/* 2>/dev/null || true
+          chmod +x pkg/linux-x86_64/file-encryption-gui pkg/linux-x86_64/bin/* 2>/dev/null || true
+
+          # Create archives
+          tar -czf release/file-encryption-macos-arm64.tar.gz -C pkg macos-arm64
+          tar -czf release/file-encryption-macos-x86_64.tar.gz -C pkg macos-x86_64
+          tar -czf release/file-encryption-linux-x86_64.tar.gz -C pkg linux-x86_64
+          cd pkg && zip -r ../release/file-encryption-windows-x86_64.zip windows-x86_64 && cd ..
+
+          # Linux ARM64: CLI-only package (no GUI due to cross-compilation constraints)
+          mkdir -p pkg/linux-arm64/bin
+          cp stubs/* pkg/linux-arm64/bin/ 2>/dev/null || true
+          chmod +x pkg/linux-arm64/bin/* 2>/dev/null || true
+          tar -czf release/file-encryption-linux-arm64.tar.gz -C pkg linux-arm64
+
+          echo "=== Release archives ==="
+          ls -lh release/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            release/file-encryption-macos-arm64.tar.gz
+            release/file-encryption-macos-x86_64.tar.gz
+            release/file-encryption-linux-x86_64.tar.gz
+            release/file-encryption-linux-arm64.tar.gz
+            release/file-encryption-windows-x86_64.zip

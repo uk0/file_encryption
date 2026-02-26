@@ -1,14 +1,23 @@
 [package]
 name = "file_encryption"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["张建新 <zhangjianxin@bigsfintech.com>"]
-edition = "2018"
+edition = "2021"
+
+[lib]
+name = "file_encryption"
+path = "src/lib.rs"
 
 [[bin]]
 name = "task"
-#path = "src/lib.rs"
-path = "src/lib_self_release.rs"
+path = "src/bin/cli.rs"
+
+[[bin]]
+name = "file-encryption-gui"
+path = "src/bin/gui.rs"
 
 [dependencies]
 des = "0.0.4"
 uuid = { version = "0.8", features = ["serde", "v4"] }
+eframe = "0.31"
+rfd = "0.15"
