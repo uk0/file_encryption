@@ -13,19 +13,23 @@ pub fn write_bin<P: AsRef<Path>>(vb: Vec<u8>, filename: P) -> std::io::Result<()
     Ok(())
 }
 
-/// Prepend a slice to the beginning of a Vec
+/// Prepend a slice to the beginning of a Vec.
+///
+/// # Safety
+/// The caller must ensure `T` is `Copy` and `vec` has no outstanding references
+/// into its buffer. The vec must not be accessed by other threads during this call.
 pub unsafe fn prepend_slice<T: Copy>(vec: &mut Vec<T>, slice: &[T]) {
     let len = vec.len();
     let amt = slice.len();
     vec.reserve(amt);
-    ptr::copy(vec.as_ptr(), vec.as_mut_ptr().offset(amt as isize), len);
+    ptr::copy(vec.as_ptr(), vec.as_mut_ptr().add(amt), len);
     ptr::copy(slice.as_ptr(), vec.as_mut_ptr(), amt);
     vec.set_len(len + amt);
 }
 
 /// Convert a password slice to an 8-byte DES key
 pub fn to_key(slice: &[u8]) -> [u8; 8] {
-    let mut vec: Vec<u8> = slice.iter().cloned().collect();
+    let mut vec: Vec<u8> = slice.to_vec();
     let mut key = [0u8; 8];
     let diff = key.len().saturating_sub(vec.len());
     if diff > 0 {
@@ -38,9 +42,9 @@ pub fn to_key(slice: &[u8]) -> [u8; 8] {
 /// Convert path separators for current OS
 pub fn convert_path(path_str: &str) -> String {
     if cfg!(target_os = "windows") {
-        String::from(path_str.replace("\\", "/"))
+        path_str.replace("\\", "/")
     } else {
-        String::from(path_str)
+        path_str.to_string()
     }
 }
 
@@ -210,10 +214,10 @@ pub fn decrypt_file(
     let encrypted_data = &result_tmp[start..result_tmp.len() - 10];
 
     // DES decrypt
-    let data = des::decrypt(&encrypted_data.to_vec(), &to_key(password.as_bytes()));
+    let data = des::decrypt(encrypted_data, &to_key(password.as_bytes()));
 
     // Extract filename length and filename
-    let filename_len = *data.get(0).ok_or("Decrypted data is empty")? as usize;
+    let filename_len = *data.first().ok_or("Decrypted data is empty")? as usize;
     if filename_len + 1 > data.len() {
         return Err("Invalid decrypted data format".to_string());
     }
